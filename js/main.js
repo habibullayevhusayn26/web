@@ -613,6 +613,30 @@ function renderAuctionTable(items) {
   });
 }
 
+function openSharedGiftFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const sharedGiftId = params.get('gift');
+  if (!sharedGiftId) return;
+
+  const sharedItem = currentItems.find(item => String(item.id) === String(sharedGiftId));
+  if (!sharedItem) return;
+
+  const targetSection = document.getElementById('nft-gifts');
+  const openModal = () => {
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.setTimeout(() => openGiftDetail(sharedItem), 220);
+  };
+
+  if (document.readyState === 'complete') {
+    openModal();
+    return;
+  }
+
+  window.addEventListener('load', openModal, { once: true });
+}
+
 let currentItems = [...fallbackItems];
 let activeFilter = 'all';
 
@@ -624,6 +648,7 @@ function initCatalog() {
     renderCatalog(currentItems, activeFilter, catalog);
     renderCatalog(currentItems, activeFilter, catalogSecondary);
     renderAuctionTable(currentItems);
+    openSharedGiftFromUrl();
   }, 320);
 }
 
