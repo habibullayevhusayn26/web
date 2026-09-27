@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Mint — Savat va checkout</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--page-background);
+        color: var(--text);
+        font-family: Inter, "Segoe UI", sans-serif;
+      }
+      .checkout-shell {
+        width: min(1100px, calc(100% - 32px));
+        margin: 32px auto 60px;
+      }
+      .checkout-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+      }
+      .panel {
+        background: var(--inset-background);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+      }
+      .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .cart-asset {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .mini-gift {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--button-start), var(--button-end));
+      }
+      .checkout-summary {
+        display: grid;
+        gap: 12px;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+      }
+      .summary-row strong { color: var(--text); }
+      @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="site-loader" data-site-loader role="status" aria-live="polite">
+      <div class="site-loader-mark" aria-hidden="true">
+        <span class="site-loader-ring"></span>
+        <img src="img/logo.svg" alt="" />
+      </div>
+      <div class="site-loader-caption">
+        <span>Yuklanmoqda</span>
+        <span class="site-loader-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      </div>
+    </div>
+    <div class="checkout-shell">
+      <header class="topbar" style="margin-bottom: 24px;">
+        <div class="brand-wrap">
+          <div class="brand-mark"><img src="img/logo.svg" alt="Market Mint" /></div>
+          <span class="brand-name">Market Mint</span>
+        </div>
+        <div class="topbar-actions">
+          <a class="button button-secondary" href="index.html">Xaridni davom etish</a>
+          <button class="button button-primary">Hozir to'lash</button>
+        </div>
+      </header>
+
+      <div class="checkout-grid">
+        <div class="panel">
+          <h2 style="margin-top:0; font-size:2rem; letter-spacing:-0.05em;">Savat</h2>
+
+          <div class="cart-item">
+            <div class="cart-asset">
+              <div class="mini-gift"></div>
+              <div>
+                <strong>Sparks</strong><br>
+                <small style="color:var(--muted);">#12,831 • Rare</small>
+              </div>
+            </div>
+            <strong>3.4 TON</strong>
+          </div>
+
+          <div class="cart-item">
+            <div class="cart-asset">
+              <div class="mini-gift" style="background:linear-gradient(135deg,#f9a8d4,#f97316);"></div>
+              <div>
+                <strong>Nova</strong><br>
+                <small style="color:var(--muted);">#8,024 • Legendary</small>
+              </div>
+            </div>
+            <strong>2.9 TON</strong>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 style="margin-top:0; font-size:1.7rem; letter-spacing:-0.05em;">Umumiy ma'lumot</h2>
+          <div class="checkout-summary">
+            <div class="summary-row"><span>Mahsulotlar summasi</span><strong>6.3 TON</strong></div>
+            <div class="summary-row"><span>Tarmoq haqqi</span><strong>0.08 TON</strong></div>
+            <div class="summary-row"><span>Yetkazib berish</span><strong>0.00 TON</strong></div>
+            <div class="summary-row" style="font-size:1.1rem; margin-top:8px;"><span>Jami</span><strong>6.38 TON</strong></div>
+            <button class="button button-primary" style="margin-top: 8px;">Checkoutni tasdiqlash</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/site-loader.js"></script>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Mint — Mahsulot tafsiloti</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--page-background);
+        color: var(--text);
+        font-family: Inter, "Segoe UI", sans-serif;
+      }
+      .product-shell {
+        width: min(1260px, calc(100% - 32px));
+        margin: 32px auto 50px;
+      }
+      .product-layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 22px;
+      }
+      .panel {
+        background: var(--inset-background);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+      }
+      .product-visual {
+        min-height: 520px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        background: var(--product-visual-background);
+      }
+      .gift-box-large {
+        width: 220px;
+        height: 220px;
+        border-radius: 34px;
+        background: var(--product-box-background);
+        transform: rotate(-14deg);
+        box-shadow: var(--product-box-shadow);
+      }
+      .product-info h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        letter-spacing: -0.06em;
+      }
+      .meta-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .meta-pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--control-background);
+        border: 1px solid var(--control-border);
+        color: var(--muted);
+      }
+      .price-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: var(--control-background);
+        border: 1px solid var(--control-border);
+      }
+      .action-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .description {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+      @media (max-width: 980px) {
+        .product-layout { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 480px) {
+        .product-layout > * { min-width: 0; }
+        .action-row { flex-wrap: wrap; }
+        .action-row .button { flex: 1 1 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="site-loader" data-site-loader role="status" aria-live="polite">
+      <div class="site-loader-mark" aria-hidden="true">
+        <span class="site-loader-ring"></span>
+        <img src="img/logo.svg" alt="" />
+      </div>
+      <div class="site-loader-caption">
+        <span>Yuklanmoqda</span>
+        <span class="site-loader-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      </div>
+    </div>
+    <div class="product-shell">
+      <header class="topbar" style="margin-bottom: 24px;">
+        <div class="brand-wrap">
+          <div class="brand-mark"><img src="img/logo.svg" alt="Market Mint" /></div>
+          <span class="brand-name">Market Mint</span>
+        </div>
+        <div class="topbar-actions">
+          <a class="button button-secondary" href="index.html">Bosh sahifa</a>
+          <a class="button button-primary" href="cart.html">Checkout</a>
+        </div>
+      </header>
+
+      <div class="product-layout">
+        <div class="panel product-visual">
+          <div class="gift-box-large"></div>
+        </div>
+
+        <div class="panel product-info">
+          <span class="eyebrow">Legendary gift</span>
+          <h1>Sparks</h1>
+
+          <div class="meta-row">
+            <span class="meta-pill">Seriya #12,831</span>
+            <span class="meta-pill">Sotuvda</span>
+            <span class="meta-pill">TON tarmog'i</span>
+          </div>
+
+          <div class="price-box">
+            <div>
+              <small style="color:var(--muted); display:block;">Joriy narx</small>
+              <strong style="font-size:1.8rem; letter-spacing:-0.05em;">3.4 TON</strong>
+            </div>
+            <div style="text-align:right; color:var(--muted);">
+              <small>≈</small>
+              <strong style="display:block; color:var(--text); font-size:1.1rem;">$1,260</strong>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="button button-primary">Taklif qoldirish</button>
+            <button class="button button-secondary">Savatchaga qo'shish</button>
+          </div>
+
+          <p class="description" style="margin-top:20px;">
+            Sparks — TON tarmog'ida tasdiqlangan premium Telegram uslubidagi kolleksiya. Unda noyob animatsion vizual qatlam, hamjamiyat maqomi va Market Mint ekotizimiga bog'langan bozordagi tarix mavjud.
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="js/site-loader.js"></script>
+  </body>
+</html>
