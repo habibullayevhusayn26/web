@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <div class="connectivity-pill" data-connectivity-pill role="status" aria-live="polite">
+      <span class="connectivity-dot" aria-hidden="true"></span>
+      <span data-connectivity-label>Online</span>
+    </div>
     <div class="site-loader" data-site-loader role="status" aria-live="polite">
       <div class="site-loader-mark" data-animated-logo aria-hidden="true">
         <img src="img/logo.svg" alt="" />
@@ -23,19 +27,13 @@
     </div>
     <div class="page-shell">
       <header class="topbar">
-        <div class="brand-wrap">
+        <a class="brand-wrap" href="#marketplace" aria-label="Market Mint bosh sahifasi">
           <div class="brand-mark" data-animated-logo>
             <img src="img/logo.svg" alt="Market Mint logo" />
           </div>
           <span class="brand-name">Market Mint</span>
-        </div>
+        </a>
 
-        <div class="topbar-actions">
-          <a class="button button-primary topbar-cta" href="#nft-gifts">
-            <span>Giftlarni ko'rish</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
-          </a>
-        </div>
       </header>
 
       <nav class="main-nav" aria-label="Main navigation">
@@ -279,12 +277,12 @@
 
       <footer class="site-footer">
         <div class="footer-brand">
-          <div class="brand-wrap small-brand">
+          <a class="brand-wrap small-brand" href="#marketplace" aria-label="Market Mint bosh sahifasi">
             <div class="brand-mark" data-animated-logo>
               <img src="img/logo.svg" alt="Market Mint logo" loading="lazy" decoding="async" />
             </div>
             <span class="brand-name">Market Mint</span>
-          </div>
+          </a>
           <p>Premium Telegram NFT gift marketplace for digital culture.</p>
         </div>
 
@@ -341,6 +339,17 @@
             </p>
 
             <div class="gift-detail-actions">
+              <button id="gift-share-link" class="button button-glass" type="button">
+                <span aria-hidden="true">↗</span>
+                Ulashish
+              </button>
+              <button id="gift-telegram-link" class="button button-glass" type="button" data-contact-animation="img/contact-us/telegram.json">
+                <span class="telegram-button-icon" aria-hidden="true">
+                  <span class="telegram-fallback">✈</span>
+                  <span class="contact-animation-player" aria-hidden="true"></span>
+                </span>
+                Telegram
+              </button>
               <a id="gift-buy-link" class="button button-primary" href="https://t.me/habibullayev_28" target="_blank" rel="noopener noreferrer">Sotib olish</a>
             </div>
           </div>

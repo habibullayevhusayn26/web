@@ -85,6 +85,7 @@
               autoplay: false,
               animationData
             });
+            animation.setSpeed(0.7);
 
             animation.addEventListener('DOMLoaded', () => {
               animationReady = true;
@@ -103,7 +104,7 @@
   }
 
   function initializeContactAnimations(lottiePromise) {
-    const contactLinks = [...document.querySelectorAll('.contact-link[data-contact-animation]')];
+    const contactLinks = [...document.querySelectorAll('[data-contact-animation]')];
     if (!contactLinks.length) return;
 
     lottiePromise.then(() => {

@@ -314,13 +314,28 @@ const catalog = document.getElementById('catalog');
 const catalogSecondary = document.getElementById('catalog-secondary');
 const auctionTableBody = document.getElementById('auction-table-body');
 const purchaseLink = 'https://t.me/habibullayev_28';
+const catalogStorageKey = 'market-mint-catalog-v1';
 
 function loadCatalog() {
+  try {
+    const cachedCatalog = JSON.parse(localStorage.getItem(catalogStorageKey) || 'null');
+    if (Array.isArray(cachedCatalog) && cachedCatalog.length) return cachedCatalog;
+  } catch (error) {
+    // Private browsing can deny storage access; the local fallback still works.
+  }
+
+  try {
+    localStorage.setItem(catalogStorageKey, JSON.stringify(fallbackItems));
+  } catch (error) {
+    // The catalog remains usable when storage is unavailable.
+  }
+
   return fallbackItems;
 }
 
 let modalScrollPosition = 0;
 let modalUnlockTimer;
+let activeGiftItem = null;
 
 function lockPageScroll() {
   window.clearTimeout(modalUnlockTimer);
@@ -343,6 +358,7 @@ function unlockPageScroll() {
 function openGiftDetail(item) {
   const modal = document.getElementById('gift-detail-modal');
   if (!modal || !item) return;
+  activeGiftItem = item;
 
   const name = document.getElementById('gift-detail-name');
   const model = document.getElementById('gift-detail-model');
@@ -353,8 +369,14 @@ function openGiftDetail(item) {
   const img = document.getElementById('gift-detail-image');
   const imageWrap = document.getElementById('gift-detail-image-wrap');
   const buyLink = document.getElementById('gift-buy-link');
+  const rarity = document.getElementById('gift-detail-rarity');
+  const price = document.getElementById('gift-detail-price');
+  const status = document.getElementById('gift-detail-status');
 
   if (name) name.textContent = item.name || 'Gift';
+  if (rarity) rarity.textContent = item.rarity || 'Rare';
+  if (price) price.textContent = `${Number(item.price || 0).toFixed(1)} TON`;
+  if (status) status.textContent = item.status === 'auction' ? 'Auksion' : item.status === 'owned' ? 'Mulkda' : 'Sotuvda';
   if (model) model.textContent = item.model || item.name || 'Gift';
   if (symbol) {
     const symbolName = item.symbol || item.type || 'Gift';
@@ -485,6 +507,73 @@ function renderCatalog(items, filter = 'all', target = catalog) {
   visibleItems.forEach(item => target.appendChild(renderGiftCard(item)));
 }
 
+function renderCatalogSkeletons(target, count = 5) {
+  if (!target) return;
+  target.innerHTML = Array.from({ length: count }, () => `
+    <article class="catalog-skeleton" aria-hidden="true">
+      <div class="skeleton-block skeleton-art"></div>
+      <div class="skeleton-copy">
+        <span class="skeleton-block skeleton-line"></span>
+        <span class="skeleton-block skeleton-line wide"></span>
+        <span class="skeleton-block skeleton-line"></span>
+      </div>
+    </article>
+  `).join('');
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'share-toast';
+  toast.setAttribute('role', 'status');
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('is-visible'));
+  window.setTimeout(() => {
+    toast.classList.remove('is-visible');
+    window.setTimeout(() => toast.remove(), 260);
+  }, 2400);
+}
+
+function getGiftShareUrl(item) {
+  const url = new URL(window.location.href);
+  url.hash = 'nft-gifts';
+  url.searchParams.set('gift', item.id);
+  return url.toString();
+}
+
+async function shareGift() {
+  if (!activeGiftItem) return;
+  const item = activeGiftItem;
+  const shareData = {
+    title: `${item.name} | Market Mint`,
+    text: `${item.name} #${item.serial} - ${Number(item.price || 0).toFixed(1)} TON`,
+    url: getGiftShareUrl(item)
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+      showToast('Gift havolasi nusxalandi');
+    } else {
+      showToast('Ulashish bu brauzerda qo‘llanmaydi');
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') showToast('Ulashish amalga oshmadi');
+  }
+}
+
+function shareGiftToTelegram() {
+  if (!activeGiftItem) return;
+  const item = activeGiftItem;
+  const text = `${item.name} #${item.serial} - ${Number(item.price || 0).toFixed(1)} TON`;
+  const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(getGiftShareUrl(item))}&text=${encodeURIComponent(text)}`;
+  window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+}
+
 const detailModal = document.getElementById('gift-detail-modal');
 if (detailModal) {
   detailModal.addEventListener('click', (event) => {
@@ -529,9 +618,13 @@ let activeFilter = 'all';
 
 function initCatalog() {
   currentItems = loadCatalog();
-  renderCatalog(currentItems, activeFilter, catalog);
-  renderCatalog(currentItems, activeFilter, catalogSecondary);
-  renderAuctionTable(currentItems);
+  renderCatalogSkeletons(catalog);
+  renderCatalogSkeletons(catalogSecondary);
+  window.setTimeout(() => {
+    renderCatalog(currentItems, activeFilter, catalog);
+    renderCatalog(currentItems, activeFilter, catalogSecondary);
+    renderAuctionTable(currentItems);
+  }, 320);
 }
 
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -559,6 +652,31 @@ if (giftSearch) {
 }
 
 initCatalog();
+
+const shareButton = document.getElementById('gift-share-link');
+const telegramShareButton = document.getElementById('gift-telegram-link');
+shareButton?.addEventListener('click', shareGift);
+telegramShareButton?.addEventListener('click', shareGiftToTelegram);
+
+const connectivityPill = document.querySelector('[data-connectivity-pill]');
+const connectivityLabel = document.querySelector('[data-connectivity-label]');
+let connectivityHideTimer;
+
+function updateConnectivityStatus() {
+  if (!connectivityPill || !connectivityLabel) return;
+  const isOnline = navigator.onLine;
+  connectivityLabel.textContent = isOnline ? 'Online' : 'Offline mode';
+  connectivityPill.classList.toggle('is-offline', !isOnline);
+  connectivityPill.classList.add('is-visible');
+  window.clearTimeout(connectivityHideTimer);
+  if (isOnline) {
+    connectivityHideTimer = window.setTimeout(() => connectivityPill.classList.remove('is-visible'), 2200);
+  }
+}
+
+window.addEventListener('online', updateConnectivityStatus);
+window.addEventListener('offline', updateConnectivityStatus);
+updateConnectivityStatus();
 
 const comingSoonModal = document.getElementById('coming-soon-modal');
 if (comingSoonModal) {
@@ -596,6 +714,9 @@ if (mainNavigation) {
   const navigationLinks = [...mainNavigation.querySelectorAll(':scope > a')];
   let activeNavigationLink = navigationLinks.find(link => link.hasAttribute('aria-current')) || navigationLinks[0];
   let scrollUpdatePending = false;
+  let indicatorTransitionTimer;
+  let navigationTargetLock = null;
+  let navigationTargetUnlockTimer;
 
   function positionNavigationIndicator(link) {
     const indicator = mainNavigation.querySelector('.nav-indicator');
@@ -607,15 +728,27 @@ if (mainNavigation) {
     mainNavigation.style.setProperty('--indicator-width', `${linkRect.width}px`);
   }
 
+  function playIndicatorTransition() {
+    window.clearTimeout(indicatorTransitionTimer);
+    mainNavigation.classList.remove('is-nav-transitioning');
+    requestAnimationFrame(() => mainNavigation.classList.add('is-nav-transitioning'));
+    indicatorTransitionTimer = window.setTimeout(() => {
+      mainNavigation.classList.remove('is-nav-transitioning');
+    }, 600);
+  }
+
   function setActiveNavigationLink(link) {
     if (!navigationLinks.includes(link)) return;
 
+    const activeLinkChanged = activeNavigationLink !== link;
     activeNavigationLink = link;
     positionNavigationIndicator(link);
     navigationLinks.forEach(item => {
       if (item === link) item.setAttribute('aria-current', 'location');
       else item.removeAttribute('aria-current');
     });
+
+    if (activeLinkChanged) playIndicatorTransition();
   }
 
   function prepareNavigationTarget(link) {
@@ -632,6 +765,7 @@ if (mainNavigation) {
   function previewNavigationLink(link) {
     positionNavigationIndicator(link);
     mainNavigation.classList.add('nav-hovering');
+    playIndicatorTransition();
   }
 
   function restoreActiveNavigationLink() {
@@ -640,6 +774,8 @@ if (mainNavigation) {
   }
 
   function updateActiveNavigationLink() {
+    if (navigationTargetLock) return;
+
     const activationLine = window.innerHeight * 0.42;
     let visibleLink = navigationLinks[0];
 
@@ -659,6 +795,12 @@ if (mainNavigation) {
     link.addEventListener('click', () => {
       prepareNavigationTarget(link);
       setActiveNavigationLink(link);
+      navigationTargetLock = link;
+      window.clearTimeout(navigationTargetUnlockTimer);
+      navigationTargetUnlockTimer = window.setTimeout(() => {
+        navigationTargetLock = null;
+        updateActiveNavigationLink();
+      }, 900);
     });
     link.addEventListener('pointerenter', event => {
       if (event.pointerType === 'mouse') previewNavigationLink(link);
