@@ -9,13 +9,11 @@
       content="Market Mint is a premium NFT gift marketplace for Telegram communities, digital collectibles, and rare gift drops."
     />
     <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
-    <link rel="shortcut icon" href="img/logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div class="site-loader" data-site-loader role="status" aria-live="polite">
-      <div class="site-loader-mark" aria-hidden="true">
-        <span class="site-loader-ring"></span>
+      <div class="site-loader-mark" data-animated-logo aria-hidden="true">
         <img src="img/logo.svg" alt="" />
       </div>
       <div class="site-loader-caption">
@@ -26,38 +24,41 @@
     <div class="page-shell">
       <header class="topbar">
         <div class="brand-wrap">
-          <div class="brand-mark">
+          <div class="brand-mark" data-animated-logo>
             <img src="img/logo.svg" alt="Market Mint logo" />
           </div>
           <span class="brand-name">Market Mint</span>
         </div>
 
         <div class="topbar-actions">
-          <a class="button button-primary" href="#nft-gifts">Giftlarni ko'rish</a>
+          <a class="button button-primary topbar-cta" href="#nft-gifts">
+            <span>Giftlarni ko'rish</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
+          </a>
         </div>
       </header>
 
-      <nav class="main-nav" aria-label="Main navigation" style="--active-index: 0">
+      <nav class="main-nav" aria-label="Main navigation">
         <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="#marketplace" data-i18n="marketplace" aria-current="location">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10.5 4.5 4h15L21 10.5M5 10v10h14V10M3 10.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 20v-5h6v5" /></svg>
+        <a href="#marketplace" data-i18n="marketplace" data-nav-animation="img/json/nav-marketplace.json" aria-current="location">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10.5 4.5 4h15L21 10.5M5 10v10h14V10M3 10.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 20v-5h6v5" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
           <span class="nav-label">Marketplace</span>
         </a>
-        <a href="#nft-gifts" data-i18n="nftGifts">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.4-3.2C10.6 5.2 12 7 12 7Zm0 0h4.5a2.5 2.5 0 1 0-2.4-3.2C13.4 5.2 12 7 12 7Z" /></svg>
+        <a href="#nft-gifts" data-i18n="nftGifts" data-nav-animation="img/json/nav-gifts.json">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.4-3.2C10.6 5.2 12 7 12 7Zm0 0h4.5a2.5 2.5 0 1 0-2.4-3.2C13.4 5.2 12 7 12 7Z" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
           <span class="nav-label">NFT Gifts</span>
         </a>
-        <a href="#catalog" data-i18n="drops">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3ZM19 15l1 2.5 2.5 1-2.5 1L19 22l-1-2.5-2.5-1 2.5-1 1-2.5ZM5 2l.8 2.2L8 5l-2.2.8L5 8l-.8-2.2L2 5l2.2-.8L5 2Z" /></svg>
-          <span class="nav-label">Drops</span>
-        </a>
-        <a href="#features" data-i18n="whyUs">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4" /></svg>
+        <a href="#features" data-i18n="whyUs" data-nav-animation="img/json/why-us.json">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
           <span class="nav-label">Why us</span>
         </a>
-        <a href="#how-it-works" data-i18n="howItWorks">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="19" r="2" /></svg>
+        <a href="#how-it-works" data-i18n="howItWorks" data-nav-animation="img/json/it-works.json">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="19" r="2" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
           <span class="nav-label">How it works</span>
+        </a>
+        <a href="#contact-us" data-nav-animation="img/json/contact-us.json">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16v14H4zM4 7l8 6 8-6" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
+          <span class="nav-label">Contact Us</span>
         </a>
       </nav>
 
@@ -122,19 +123,8 @@
             <div class="mini-panel small-panel">
               <span class="tiny-label">Instant claim</span>
               <strong>18 min ago</strong>
-              <small>Last gift claimed by @Rivalz</small>
+              <small>Last gift claimed by @admn28</small>
             </div>
-          </div>
-        </section>
-
-        <section class="brand-strip">
-          <span>ISHONCHLI</span>
-          <div class="brand-list">
-            <span>Telegram Labs</span>
-            <span>PixelCore</span>
-            <span>RareLoop</span>
-            <span>GuildVerse</span>
-            <span>MintBridge</span>
           </div>
         </section>
 
@@ -195,23 +185,6 @@
           </div>
         </section>
 
-        <section class="market-utility-grid">
-          <article class="utility-card section-shell">
-            <span class="eyebrow">Savat va checkout</span>
-            <h3>Tez buyurtma oqimi</h3>
-            <p>Giftlarni tanlang, hamyonni tasdiqlang va Telegram uslubidagi tajriba bilan sotib oling.</p>
-            <a href="cart.html" class="mini-link">Savatchani ochish</a>
-          </article>
-
-          <article class="utility-card section-shell">
-            <span class="eyebrow">Mahsulot tafsiloti</span>
-            <h3>Gift ma'lumot paneli</h3>
-            <p>Sotib olishdan oldin seriya raqamlari, takliflar, egalik tafsilotlari va live narxlarni ko'ring.</p>
-            <a href="product.html" class="mini-link">Mahsulotni ko'rish</a>
-          </article>
-
-        </section>
-
         <section id="how-it-works" class="steps section-shell">
           <div class="section-heading left-heading">
             <div>
@@ -241,12 +214,73 @@
           </div>
         </section>
 
+        <section id="contact-us" class="contact-section section-shell">
+          <div class="section-heading left-heading">
+            <div>
+              <span class="eyebrow">Contact Us</span>
+              <h2>Biz bilan bog'laning</h2>
+            </div>
+          </div>
+
+          <div class="contact-grid">
+            <a class="contact-link" href="mailto:habibullayevhusayn037@gmail.com" data-contact-animation="img/contact-us/mail.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">Gmail</span>
+              </span>
+            </a>
+
+            <a class="contact-link" href="https://t.me/habibullayev_28" target="_blank" rel="noopener noreferrer" data-contact-animation="img/contact-us/telegram.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m21 3-7.2 18-3.7-7.1L3 10.2 21 3Z"/><path d="m10.1 13.9 4.3-4.3"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">Telegram</span>
+              </span>
+            </a>
+
+            <a class="contact-link" href="https://instagram.com/28_kh_" target="_blank" rel="noopener noreferrer" data-contact-animation="img/contact-us/instagram.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">Instagram</span>
+              </span>
+            </a>
+
+            <a class="contact-link" href="tel:+998908481728" data-contact-animation="img/contact-us/call.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h3l2 5-2.5 1.5a14 14 0 0 0 5 5L16 12l5 2v3c0 1.1-.9 2-2 2C10 19 5 14 5 5c0-1.1.9-2 2-2Z"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">Telefon</span>
+              </span>
+            </a>
+
+            <button class="contact-link contact-link-button" type="button" data-coming-soon data-contact-animation="img/contact-us/YouTube.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="m10 9 5 3-5 3z"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">YouTube</span>
+              </span>
+            </button>
+
+            <button class="contact-link contact-link-button" type="button" data-coming-soon data-contact-animation="img/contact-us/TikTok.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4c.4 2.2 1.7 3.4 4 3.6v3.2a8 8 0 0 1-4-1.2v5.1a5.2 5.2 0 1 1-4.4-5.1v3.4a1.8 1.8 0 1 0 1.2 1.7V4h3.2Z"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">TikTok</span>
+              </span>
+            </button>
+
+            <button class="contact-link contact-link-button" type="button" data-coming-soon data-contact-animation="img/contact-us/facebook.json">
+              <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 21v-7h2.5l.4-3H14V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.6-.1-1.4-.2-2.4-.2-2.4 0-4.1 1.5-4.1 4.2V11H8v3h2.5v7"/></svg><span class="contact-animation-player" aria-hidden="true"></span></span>
+              <span class="contact-link-copy">
+                <span class="contact-link-label">Facebook</span>
+              </span>
+            </button>
+
+          </div>
+        </section>
+
       </main>
 
       <footer class="site-footer">
         <div class="footer-brand">
           <div class="brand-wrap small-brand">
-            <div class="brand-mark">
+            <div class="brand-mark" data-animated-logo>
               <img src="img/logo.svg" alt="Market Mint logo" loading="lazy" decoding="async" />
             </div>
             <span class="brand-name">Market Mint</span>
@@ -314,7 +348,18 @@
       </div>
     </div>
 
+    <div class="coming-soon-overlay" id="coming-soon-modal" aria-hidden="true">
+      <section class="coming-soon-dialog" role="dialog" aria-modal="true" aria-labelledby="coming-soon-title" aria-describedby="coming-soon-description">
+        <button class="coming-soon-close" type="button" data-coming-soon-close aria-label="Yopish">×</button>
+        <span class="eyebrow">Contact Us</span>
+        <h2 id="coming-soon-title">Coming soon</h2>
+        <p id="coming-soon-description"><span data-coming-soon-service></span> havolasi tez orada qo'shiladi.</p>
+        <button class="button button-primary coming-soon-confirm" type="button" data-coming-soon-close>Tushunarli</button>
+      </section>
+    </div>
+
     <script src="js/main.js"></script>
+    <script src="js/animated-logo.js"></script>
     <script src="js/site-loader.js"></script>
   </body>
 </html>

@@ -301,7 +301,7 @@ function buildGiftRecord(index) {
     price,
     sold,
     date: formatDate(),
-    owner: '@Rivalz',
+    owner: '@admn28',
     from: '@MintLab',
     to: '@Atlas',
     usd: (price * 360).toFixed(0),
@@ -560,33 +560,82 @@ if (giftSearch) {
 
 initCatalog();
 
+const comingSoonModal = document.getElementById('coming-soon-modal');
+if (comingSoonModal) {
+  const serviceLabel = comingSoonModal.querySelector('[data-coming-soon-service]');
+  const closeButtons = comingSoonModal.querySelectorAll('[data-coming-soon-close]');
+  let lastComingSoonTrigger = null;
+
+  function closeComingSoonModal() {
+    comingSoonModal.classList.remove('active');
+    comingSoonModal.setAttribute('aria-hidden', 'true');
+    lastComingSoonTrigger?.focus();
+  }
+
+  document.querySelectorAll('[data-coming-soon]').forEach(button => {
+    button.addEventListener('click', () => {
+      lastComingSoonTrigger = button;
+      if (serviceLabel) serviceLabel.textContent = button.querySelector('.contact-link-label')?.textContent || '';
+      comingSoonModal.classList.add('active');
+      comingSoonModal.setAttribute('aria-hidden', 'false');
+      comingSoonModal.querySelector('[data-coming-soon-close]')?.focus();
+    });
+  });
+
+  closeButtons.forEach(button => button.addEventListener('click', closeComingSoonModal));
+  comingSoonModal.addEventListener('click', event => {
+    if (event.target === comingSoonModal) closeComingSoonModal();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && comingSoonModal.classList.contains('active')) closeComingSoonModal();
+  });
+}
+
 const mainNavigation = document.querySelector('.main-nav');
 if (mainNavigation) {
   const navigationLinks = [...mainNavigation.querySelectorAll(':scope > a')];
   let activeNavigationLink = navigationLinks.find(link => link.hasAttribute('aria-current')) || navigationLinks[0];
   let scrollUpdatePending = false;
 
+  function positionNavigationIndicator(link) {
+    const indicator = mainNavigation.querySelector('.nav-indicator');
+    if (!indicator || !link) return;
+
+    const navigationRect = mainNavigation.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+    mainNavigation.style.setProperty('--indicator-left', `${linkRect.left - navigationRect.left - mainNavigation.clientLeft}px`);
+    mainNavigation.style.setProperty('--indicator-width', `${linkRect.width}px`);
+  }
+
   function setActiveNavigationLink(link) {
-    const activeIndex = navigationLinks.indexOf(link);
-    if (activeIndex < 0) return;
+    if (!navigationLinks.includes(link)) return;
 
     activeNavigationLink = link;
-    mainNavigation.style.setProperty('--active-index', activeIndex);
-    mainNavigation.style.setProperty('--indicator-index', activeIndex);
+    positionNavigationIndicator(link);
     navigationLinks.forEach(item => {
       if (item === link) item.setAttribute('aria-current', 'location');
       else item.removeAttribute('aria-current');
     });
   }
 
+  function prepareNavigationTarget(link) {
+    const pageShell = document.querySelector('.page-shell');
+    const target = document.getElementById(link.hash.slice(1));
+    if (!pageShell || !target) return;
+
+    pageShell.style.setProperty('--nav-scroll-runway', '0px');
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+    const runway = Math.max(0, targetTop + window.innerHeight - document.documentElement.scrollHeight);
+    pageShell.style.setProperty('--nav-scroll-runway', `${runway}px`);
+  }
+
   function previewNavigationLink(link) {
-    mainNavigation.style.setProperty('--indicator-index', navigationLinks.indexOf(link));
+    positionNavigationIndicator(link);
     mainNavigation.classList.add('nav-hovering');
   }
 
   function restoreActiveNavigationLink() {
-    const activeIndex = navigationLinks.indexOf(activeNavigationLink);
-    mainNavigation.style.setProperty('--indicator-index', activeIndex);
+    positionNavigationIndicator(activeNavigationLink);
     mainNavigation.classList.remove('nav-hovering');
   }
 
@@ -607,12 +656,19 @@ if (mainNavigation) {
   }
 
   navigationLinks.forEach(link => {
-    link.addEventListener('click', () => setActiveNavigationLink(link));
-    link.addEventListener('pointerenter', () => previewNavigationLink(link));
+    link.addEventListener('click', () => {
+      prepareNavigationTarget(link);
+      setActiveNavigationLink(link);
+    });
+    link.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'mouse') previewNavigationLink(link);
+    });
     link.addEventListener('focus', () => previewNavigationLink(link));
   });
 
-  mainNavigation.addEventListener('pointerleave', restoreActiveNavigationLink);
+  mainNavigation.addEventListener('pointerleave', event => {
+    if (event.pointerType === 'mouse') restoreActiveNavigationLink();
+  });
   mainNavigation.addEventListener('focusout', event => {
     if (!mainNavigation.contains(event.relatedTarget)) restoreActiveNavigationLink();
   });
@@ -625,6 +681,7 @@ if (mainNavigation) {
       scrollUpdatePending = false;
     });
   }, { passive: true });
+  window.addEventListener('resize', () => positionNavigationIndicator(activeNavigationLink));
 
   setActiveNavigationLink(activeNavigationLink);
   updateActiveNavigationLink();
