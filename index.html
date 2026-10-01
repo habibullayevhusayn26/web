@@ -8,7 +8,8 @@
       name="description"
       content="Market Mint is a premium NFT gift marketplace for Telegram communities, digital collectibles, and rare gift drops."
     />
-    <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+    <link rel="icon" type="image/svg+xml/
+    " href="img/logo.svg" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -45,6 +46,14 @@
         <a href="#nft-gifts" data-i18n="nftGifts" data-nav-animation="img/json/nav-gifts.json">
           <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.4-3.2C10.6 5.2 12 7 12 7Zm0 0h4.5a2.5 2.5 0 1 0-2.4-3.2C13.4 5.2 12 7 12 7Z" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
           <span class="nav-label">NFT Gifts</span>
+        </a>
+        <a href="#roulette" aria-label="Ruletka">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7m0 4v7m9-9h-7m-4 0H3m15.36-6.36-4.95 4.95m-2.82 2.82-4.95 4.95m12.72 0-4.95-4.95m-2.82-2.82-4.95-4.95"/></svg></span>
+          <span class="nav-label">Ruletka</span>
+        </a>
+        <a href="#ai-chat" aria-label="AI Chat">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-7.5a7.5 7.5 0 1 1 17-2Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg></span>
+          <span class="nav-label">AI Chat</span>
         </a>
         <a href="#features" data-i18n="whyUs" data-nav-animation="img/json/why-us.json">
           <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4" /></svg><span class="nav-animation-player" aria-hidden="true"></span></span>
@@ -126,6 +135,36 @@
           </div>
         </section>
 
+        <section id="roulette" class="roulette-section section-shell" aria-labelledby="roulette-title">
+          <div class="roulette-header">
+            <div class="roulette-copy">
+              <span class="eyebrow">Market Mint drop</span>
+              <h2 id="roulette-title">Ruletkani aylantiring</h2>
+              <p>G'olib sovg'a markazdagi belgida to'xtaydi.</p>
+            </div>
+            <div class="roulette-controls">
+              <div class="roulette-result" data-roulette-result aria-live="polite" aria-atomic="true">
+                <span class="roulette-result-label">Natija</span>
+                <strong data-roulette-prize>Hali aylantirilmadi</strong>
+                <span data-roulette-status>Omadni sinab ko'ring</span>
+              </div>
+            </div>
+          </div>
+          <div class="roulette-stage">
+            <div class="roulette-window" data-roulette-window role="img" aria-label="Sovg'alar ruletkasi">
+              <div class="roulette-track" data-roulette-track aria-hidden="true"></div>
+              <span class="roulette-center-frame" aria-hidden="true"></span>
+            </div>
+            <span class="roulette-stage-caption">Markazdagi sovg'a ruletka natijasidir</span>
+          </div>
+          <div class="roulette-actions">
+            <button class="button button-primary roulette-spin-button" type="button" data-roulette-spin>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>
+              <span data-roulette-button-label>Aylantirish</span>
+            </button>
+          </div>
+        </section>
+
         <section id="nft-gifts" class="market-mint-gifts section-shell">
           <div class="market-mint-header">
             <div>
@@ -152,6 +191,40 @@
 
           <div class="catalog-grid" id="catalog"></div>
 
+        </section>
+
+        <section id="ai-chat" class="ai-chat-section section-shell" aria-labelledby="ai-chat-title">
+          <div class="ai-chat-intro">
+            <span class="eyebrow">Market Mint yordamchisi</span>
+            <h2 id="ai-chat-title">AI Chat</h2>
+            <p>Giftlar, xarid va marketplace haqida savolingizni yozing.</p>
+          </div>
+          <div class="ai-chat-panel">
+            <div class="ai-chat-toolbar">
+              <div class="ai-chat-presence"><span aria-hidden="true"></span><span>Gemini AI</span></div>
+              <button class="ai-chat-reset" type="button" data-chat-reset title="Suhbatni tozalash" aria-label="Suhbatni tozalash">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
+            </div>
+            <div class="ai-chat-messages" data-chat-messages role="log" aria-live="polite" aria-relevant="additions text">
+              <div class="ai-chat-message ai-chat-message-assistant">
+                <span class="ai-chat-message-label">Market Mint AI</span>
+                <p>Salom! Market Mint va Telegram NFT giftlari haqida savollaringizga yordam beraman.</p>
+              </div>
+            </div>
+            <div class="ai-chat-suggestions" aria-label="Namunaviy savollar">
+              <button type="button" data-chat-prompt="NFT giftni qanday sotib olaman?">Giftni qanday olaman?</button>
+              <button type="button" data-chat-prompt="Ruletka qanday ishlaydi?">Ruletka qanday ishlaydi?</button>
+            </div>
+            <form class="ai-chat-form" data-chat-form>
+              <label class="visually-hidden" for="ai-chat-input">Xabaringiz</label>
+              <textarea id="ai-chat-input" name="message" rows="1" maxlength="1000" placeholder="Savolingizni yozing..." required data-chat-input></textarea>
+              <button class="ai-chat-send" type="submit" aria-label="Xabarni yuborish" title="Yuborish" data-chat-send>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m4 4 17 8-17 8 3-8-3-8Z"/><path d="M7 12h14"/></svg>
+              </button>
+            </form>
+            <p class="ai-chat-status" data-chat-status role="status">AI javoblari Gemini bepul limitiga bog‘liq.</p>
+          </div>
         </section>
 
         <section id="features" class="features section-shell">
@@ -368,6 +441,7 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/ai-chat.js"></script>
     <script src="js/animated-logo.js"></script>
     <script src="js/site-loader.js"></script>
   </body>

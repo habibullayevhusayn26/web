@@ -640,8 +640,253 @@ function openSharedGiftFromUrl() {
 let currentItems = [...fallbackItems];
 let activeFilter = 'all';
 
+function initRoulette(items) {
+  const viewport = document.querySelector('[data-roulette-window]');
+  const track = document.querySelector('[data-roulette-track]');
+  const spinButton = document.querySelector('[data-roulette-spin]');
+  const buttonLabel = document.querySelector('[data-roulette-button-label]');
+  const prizeLabel = document.querySelector('[data-roulette-prize]');
+  const statusLabel = document.querySelector('[data-roulette-status]');
+  if (!viewport || !track || !spinButton || !buttonLabel || !prizeLabel || !statusLabel) return;
+
+  const prizes = items.slice(0, 8);
+  if (!prizes.length) {
+    spinButton.disabled = true;
+    statusLabel.textContent = 'Hozircha sovgalar mavjud emas';
+    return;
+  }
+
+  const repeatCount = 40;
+  const startRound = 2;
+  const fastGiftPasses = 192;
+  const totalGiftPasses = 200;
+  viewport.setAttribute('aria-label', `Ruletkada ${prizes.length} ta sovga bor`);
+
+  for (let round = 0; round < repeatCount; round += 1) {
+    prizes.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'roulette-card';
+      const backdrop = backdropImageMap[item.backdrop] || backdropImageMap.black;
+      card.style.backgroundImage = `url("${backdrop}")`;
+      const art = document.createElement('img');
+      art.className = 'roulette-card-art';
+      art.src = item.image || getGiftImage(item.name);
+      art.alt = '';
+      art.draggable = false;
+      const name = document.createElement('span');
+      name.className = 'roulette-card-name';
+      name.textContent = item.name || 'NFT Gift';
+      const rarity = document.createElement('span');
+      rarity.className = 'roulette-card-rarity';
+      rarity.textContent = item.rarity || 'Gift';
+      card.append(art, name, rarity);
+      track.append(card);
+    });
+  }
+
+  function centerCard(cardIndex, animate) {
+    const card = track.children[cardIndex];
+    if (!card) return;
+    const offset = viewport.clientWidth / 2 - card.offsetLeft - card.offsetWidth / 2;
+    if (!animate) {
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${offset}px)`;
+      track.offsetWidth;
+      track.style.removeProperty('transition');
+      return;
+    }
+    track.style.transform = `translateX(${offset}px)`;
+  }
+
+  function getCardOffset(cardIndex) {
+    const card = track.children[cardIndex];
+    if (!card) return 0;
+    return viewport.clientWidth / 2 - card.offsetLeft - card.offsetWidth / 2;
+  }
+
+  let lastSelectedIndex = 0;
+  let isSpinning = false;
+  let spinPhase = 'idle';
+  let fastCardIndex = 0;
+  let finalCardIndex = 0;
+  let spinTimer;
+  let spinAnimationFrame;
+  let selectedPrize;
+  let audioContext;
+  let spinSoundFrame;
+  let lastSoundCardIndex = 0;
+  let paperNoiseBuffer;
+
+  function playTone(frequency, duration, delay = 0, volume = 0.04, type = 'sine') {
+    if (!audioContext) return;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const startTime = audioContext.currentTime + delay;
+    oscillator.frequency.value = frequency;
+    oscillator.type = type;
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + duration + 0.02);
+  }
+
+  function playPaperSound() {
+    if (!audioContext) return;
+    if (!paperNoiseBuffer) {
+      const sampleCount = Math.floor(audioContext.sampleRate * 0.09);
+      paperNoiseBuffer = audioContext.createBuffer(1, sampleCount, audioContext.sampleRate);
+      const noiseData = paperNoiseBuffer.getChannelData(0);
+      for (let index = 0; index < sampleCount; index += 1) {
+        noiseData[index] = (Math.random() * 2 - 1) * (1 - index / sampleCount);
+      }
+    }
+
+    const source = audioContext.createBufferSource();
+    const filter = audioContext.createBiquadFilter();
+    const gain = audioContext.createGain();
+    const startTime = audioContext.currentTime;
+    source.buffer = paperNoiseBuffer;
+    filter.type = 'bandpass';
+    filter.frequency.value = 1800 + randomInt(0, 500);
+    filter.Q.value = 0.8;
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.22, startTime + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.085);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+    source.start(startTime);
+    playTone(210 + randomInt(0, 2) * 25, 0.055, 0, 0.16, 'square');
+  }
+
+  function startSpinSound() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      audioContext ||= new AudioContext();
+      audioContext.resume().catch(() => {});
+    } catch {
+      audioContext = undefined;
+      return;
+    }
+    const viewportRect = viewport.getBoundingClientRect();
+    const card = track.children[lastSoundCardIndex];
+    if (!card) return;
+    lastSoundCardIndex = Array.from(track.children).indexOf(card);
+
+    const playSpinTick = () => {
+      if (!isSpinning) return;
+      const firstCard = track.children[0];
+      const firstCardRect = firstCard.getBoundingClientRect();
+      const cardStep = firstCard.offsetWidth + 8;
+      const viewportCenter = viewportRect.left + viewport.clientWidth / 2;
+      const centeredCardIndex = Math.round(
+        (viewportCenter - (firstCardRect.left + firstCard.offsetWidth / 2)) / cardStep
+      );
+
+      while (lastSoundCardIndex < centeredCardIndex) {
+        lastSoundCardIndex += 1;
+        playPaperSound();
+      }
+      spinSoundFrame = window.requestAnimationFrame(playSpinTick);
+    };
+
+    spinSoundFrame = window.requestAnimationFrame(playSpinTick);
+  }
+
+  function stopSpinSound() {
+    window.cancelAnimationFrame(spinSoundFrame);
+    spinSoundFrame = undefined;
+  }
+
+  function animateSpin(startCardIndex) {
+    const startOffset = getCardOffset(startCardIndex);
+    const fastOffset = getCardOffset(fastCardIndex);
+    const finalOffset = getCardOffset(finalCardIndex);
+    const animationStartedAt = performance.now();
+
+    track.style.transition = 'none';
+    track.style.transform = `translateX(${startOffset}px)`;
+
+    const renderFrame = (now) => {
+      if (!isSpinning) return;
+      const elapsed = now - animationStartedAt;
+      if (elapsed < 5000) {
+        const progress = elapsed / 5000;
+        const offset = startOffset + (fastOffset - startOffset) * progress;
+        track.style.transform = `translateX(${offset}px)`;
+      } else if (elapsed < 10000) {
+        const progress = (elapsed - 5000) / 5000;
+        const easedProgress = 1 - (1 - progress) ** 3;
+        const offset = fastOffset + (finalOffset - fastOffset) * easedProgress;
+        track.style.transform = `translateX(${offset}px)`;
+      } else {
+        track.style.transform = `translateX(${finalOffset}px)`;
+        finishSpin();
+        return;
+      }
+      spinAnimationFrame = window.requestAnimationFrame(renderFrame);
+    };
+
+    spinAnimationFrame = window.requestAnimationFrame(renderFrame);
+  }
+
+  function playWinSound() {
+    if (!audioContext) return;
+    playTone(523, 0.18, 0, 0.13, 'triangle');
+    playTone(659, 0.18, 0.1, 0.13, 'triangle');
+    playTone(784, 0.22, 0.2, 0.15, 'triangle');
+    playTone(1047, 0.4, 0.31, 0.16, 'sine');
+  }
+
+  function finishSpin() {
+    if (!isSpinning) return;
+    window.cancelAnimationFrame(spinAnimationFrame);
+    stopSpinSound();
+    centerCard(startRound * prizes.length + lastSelectedIndex, false);
+    track.style.removeProperty('transition-duration');
+    track.style.removeProperty('transition-timing-function');
+    isSpinning = false;
+    spinPhase = 'idle';
+    window.clearTimeout(spinTimer);
+    prizeLabel.textContent = selectedPrize.name || 'NFT Gift';
+    statusLabel.textContent = 'Ruletka natijasi';
+    buttonLabel.textContent = 'Yana aylantirish';
+    spinButton.disabled = false;
+    playWinSound();
+  }
+
+  centerCard(startRound * prizes.length, false);
+
+  spinButton.addEventListener('click', () => {
+    if (isSpinning) return;
+
+    const selectedIndex = randomInt(0, prizes.length - 1);
+    selectedPrize = prizes[selectedIndex];
+    const startCardIndex = startRound * prizes.length + lastSelectedIndex;
+    centerCard(startCardIndex, false);
+    fastCardIndex = startCardIndex + fastGiftPasses;
+    const winnerOffset = (selectedIndex - lastSelectedIndex + prizes.length) % prizes.length;
+    finalCardIndex = startCardIndex + totalGiftPasses + winnerOffset;
+    lastSelectedIndex = selectedIndex;
+    lastSoundCardIndex = startCardIndex;
+    isSpinning = true;
+    spinButton.disabled = true;
+    buttonLabel.textContent = 'Aylanmoqda...';
+    prizeLabel.textContent = 'Ruletka aylanmoqda';
+    statusLabel.textContent = 'Sovga tanlanmoqda';
+    spinPhase = 'fast';
+    animateSpin(startCardIndex);
+    startSpinSound();
+  });
+}
+
 function initCatalog() {
   currentItems = loadCatalog();
+  initRoulette(currentItems);
   renderCatalogSkeletons(catalog);
   renderCatalogSkeletons(catalogSecondary);
   window.setTimeout(() => {
