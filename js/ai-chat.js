@@ -85,15 +85,23 @@ async function sendChatMessage(messageText) {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
-    while (true) {
-      const { value, done } = await reader.read();
-      pending += decoder.decode(value, { stream: !done });
-      const lines = pending.split(/\r?\n/);
-      pending = lines.pop() || '';
-      lines.forEach(readLine);
-      if (done) break;
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      reply = result.reply || '';
+      replyElement.textContent = reply;
+      typingMessage.classList.remove('ai-chat-typing');
+    } else {
+      while (true) {
+        const { value, done } = await reader.read();
+        pending += decoder.decode(value, { stream: !done });
+        const lines = pending.split(/\r?\n/);
+        pending = lines.pop() || '';
+        lines.forEach(readLine);
+        if (done) break;
+      }
+      if (pending.trim()) readLine(pending);
     }
-    if (pending.trim()) readLine(pending);
     if (!reply) throw new Error('Gemini bo‘sh javob qaytardi. Qayta urinib ko‘ring.');
 
     chatHistory.push({ role: 'assistant', text: reply });
